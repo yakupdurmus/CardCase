@@ -2,6 +2,8 @@ import React from 'react';
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, TextInput } from 'react-native';
 import { getCards, getSearchCards } from '../request';
 import { IDefaultScreenProps, IAllCardsResponse, ICard } from '../interface';
+import { setCard } from '../actions';
+import { connect } from 'react-redux';
 
 
 const Cards = (props: IDefaultScreenProps) => {
@@ -44,8 +46,9 @@ const Cards = (props: IDefaultScreenProps) => {
 
     const onPress = (card: ICard) => {
 
-        const { navigation } = props
-        navigation.navigate('Detail', { card: card })
+        const { navigation, setCard } = props
+        setCard(card)
+        navigation.navigate('Detail')
     }
 
     const renderItem = (card: ICard): JSX.Element => (
@@ -81,7 +84,11 @@ const Cards = (props: IDefaultScreenProps) => {
     );
 };
 
-export default Cards;
+
+const mapDispatchToProps = {
+    setCard,
+};
+export default connect(undefined, mapDispatchToProps)(Cards);
 
 const styles = StyleSheet.create({
     container: {
@@ -89,10 +96,10 @@ const styles = StyleSheet.create({
         padding: 10,
         backgroundColor: '#fff'
     },
-    text:{
-        padding:10,
-        backgroundColor:'#fff',
-        
+    text: {
+        padding: 10,
+        backgroundColor: '#fff',
+
     },
     listContent: {
         padding: 5,
@@ -102,8 +109,8 @@ const styles = StyleSheet.create({
         marginVertical: 10,
     },
     seperator: {
-        height:1,
-        backgroundColor:'#ddd'
+        height: 1,
+        backgroundColor: '#ddd'
     },
     input: {
         padding: 10,

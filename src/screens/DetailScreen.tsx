@@ -1,18 +1,15 @@
 import React from 'react';
 import { StyleSheet, Text, View, FlatList, Image } from 'react-native';
+import { connect } from 'react-redux';
 import { ICard } from '../interface';
 
 interface IProps {
-    route: {
-        params: {
-            card: ICard
-        }
-    }
+    card: ICard
 }
 
 const DetailScreen = (props: IProps) => {
 
-    const { route: { params: { card } } } = props
+    const { card } = props
 
     if (!card) return <Text style={styles.emptyText}>Cards Items is empty.</Text>
 
@@ -38,8 +35,14 @@ const DetailScreen = (props: IProps) => {
     )
 }
 
+const mapStateToProps = ({ cards: { card } }: any) => {
 
-export default DetailScreen;
+    return {
+        card
+    };
+};
+
+export default connect(mapStateToProps)(DetailScreen)
 
 const styles = StyleSheet.create({
     content: {
@@ -64,7 +67,7 @@ const styles = StyleSheet.create({
     img: {
         width: '100%',
         height: 500,
-        alignSelf:'center',
+        alignSelf: 'center',
     },
     listContent: {
         paddingLeft: 5,
