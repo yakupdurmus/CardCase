@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
 import { getCards, getSearchCards } from '../request';
 import { IDefaultScreenProps, IAllCardsResponse, ICard } from '../interface';
 import { setCard } from '../actions';
@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 
 
 const Cards = (props: IDefaultScreenProps) => {
-    const [loading, setLoading] = React.useState(true);
+    const [loading, setLoading] = React.useState(false);
     const [allCards, setAllCards] = React.useState<ICard[]>();
     const [searchCards, setSearchCards] = React.useState<ICard[]>([]);
     const [searchText, setSearchText] = React.useState<string>();
@@ -58,6 +58,8 @@ const Cards = (props: IDefaultScreenProps) => {
             <Text>{card.name}</Text>
         </TouchableOpacity>
     );
+
+    if (!allCards) return <ActivityIndicator />
 
     return (
         <View style={styles.container}>
