@@ -1,72 +1,80 @@
 import React from 'react';
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, TextInput } from 'react-native';
-import { getCards } from '../request';
-import { IDefaultScreenProps, IAllCardsResponse } from '../interface';
+import { getCards, getSearchCards } from '../request';
+import { IDefaultScreenProps, IAllCardsResponse, ICard } from '../interface';
 
 
 const Cards = (props: IDefaultScreenProps) => {
     const [loading, setLoading] = React.useState(true);
-    const [allCards, setAllCards] = React.useState<IAllCardsResponse>();
-    const [cardNames, setCardNames] = React.useState<string[]>([]);
-    const [search, setSearch] = React.useState<string[]>([]);
+    const [allCards, setAllCards] = React.useState<ICard[]>();
+    const [searchCards, setSearchCards] = React.useState<ICard[]>([]);
+    const [searchText, setSearchText] = React.useState<string>();
 
-
-    const load = async () => {
+    const loadAllCards = async () => {
 
         setLoading(true)
+
         getCards().then(res => {
-            setAllCards(res);
-            setCardNames(Object.keys(res))
+
+            const rawCards = Object.values(res);
+            const cards = rawCards.reduce((total, currentValue) => [...total, ...currentValue], [])
+            setAllCards(cards)
             setLoading(false)
+
+        }).catch(err => setLoading(false))
+
+    };
+
+    const loadSearchCards = async (query: string) => {
+
+        setLoading(true)
+
+        getSearchCards(query).then(res => {
+
+            setSearchCards(res)
+            setLoading(false)
+
         }).catch(err => setLoading(false))
 
     };
 
     React.useEffect(() => {
-        load();
+        loadAllCards();
     }, []);
 
-    const onPress = (cardName: string) => {
+    const onPress = (card: ICard) => {
 
         const { navigation } = props
-        navigation.navigate('Detail', {
-            cards: allCards && allCards[cardName]
-        })
+        navigation.navigate('Detail', { card: card })
     }
 
-    const renderItem = (cardName: string): JSX.Element => (
+    const renderItem = (card: ICard): JSX.Element => (
         <TouchableOpacity
-            onPress={() => onPress(cardName)}>
-            <Text>{cardName}</Text>
+            onPress={() => onPress(card)}>
+            <Text>{card.name}</Text>
         </TouchableOpacity>
     );
-
-    const onChange = (val: string) => {
-        if (val == "") {
-            setSearch([]);
-        } else {
-            const _filter = cardNames.filter(item => item.toUpperCase().includes(val.toUpperCase()))
-            setSearch(_filter)
-        }
-    }
 
     return (
         <View style={styles.container}>
             <View>
                 <TextInput
-                    onChangeText={onChange}
+                    onChangeText={(text) => {
+                        loadSearchCards(text)
+                        setSearchText(text)
+                    }}
                     style={styles.input}
                     placeholder="🔍 Search"
                 />
             </View>
             <FlatList
-                data={search.length == 0 ? cardNames : search}
+                data={searchText?.trim() ? searchCards : allCards}
                 keyExtractor={(_, i) => 'card-' + i}
                 renderItem={({ item }) => renderItem(item)}
                 contentContainerStyle={styles.listContent}
                 ItemSeparatorComponent={() => <View style={styles.seperator} />}
                 refreshing={loading}
-                onRefresh={load}
+                onRefresh={loadAllCards}
             />
         </View>
     );

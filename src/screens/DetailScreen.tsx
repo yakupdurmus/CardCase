@@ -1,20 +1,41 @@
 import React from 'react';
 import { StyleSheet, Text, View, FlatList } from 'react-native';
 import DetailItem from '../components/DetailItem';
+import { ICard } from '../interface';
 
-const DetailScreen = (props: any) => {
+interface IProps {
+    route: {
+        params: {
+            card: ICard
+        }
+    }
+}
 
-    const { route: { params: { cards } } } = props
+const DetailScreen = (props: IProps) => {
 
-    if (!cards || cards.length == 0) return <Text style={styles.emptyText}>Cards Items is empty.</Text>
+    const { route: { params: { card } } } = props
 
-    return (<FlatList
-        data={cards}
-        renderItem={({ item }) => <DetailItem card={item} />}
-        ItemSeparatorComponent={() => <View style={styles.seperator} />}
-        contentContainerStyle={styles.listContent}
-        keyExtractor={(_, i) => 'mech-' + i}
-    />)
+    if (!card) return <Text style={styles.emptyText}>Cards Items is empty.</Text>
+
+    return (
+        <View>
+            <View style={styles.content}>
+                <Text>ID: {card.cardId}</Text>
+                <Text>Name: {card.name}</Text>
+                <Text>Card Set: {card.cardSet}</Text>
+                <Text>Player Class: {card.playerClass}</Text>
+                {card.text && <Text>Text: {card.text}</Text>}
+                {card.mechanics && <Text style={styles.mechanics}>Mechanics :</Text>}
+                <FlatList
+                    data={card.mechanics}
+                    renderItem={({ item }) => <Text>{item.name}</Text>}
+                    ItemSeparatorComponent={() => <View style={styles.seperator} />}
+                    contentContainerStyle={styles.listContent}
+                    keyExtractor={(_, i) => 'mech-' + i}
+                />
+            </View>
+        </View>
+    )
 }
 
 
