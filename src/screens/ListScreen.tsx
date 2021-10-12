@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
 import { getCards, getSearchCards } from '../request';
-import { IDefaultScreenProps, IAllCardsResponse, ICard } from '../interface';
+import { IDefaultScreenProps, ICard } from '../interface';
 import { setCard } from '../actions';
 import { connect } from 'react-redux';
 
