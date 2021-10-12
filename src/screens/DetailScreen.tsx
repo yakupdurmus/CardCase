@@ -1,6 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, FlatList } from 'react-native';
-import DetailItem from '../components/DetailItem';
+import { StyleSheet, Text, View, FlatList, Image } from 'react-native';
 import { ICard } from '../interface';
 
 interface IProps {
@@ -26,6 +25,7 @@ const DetailScreen = (props: IProps) => {
                 <Text>Player Class: {card.playerClass}</Text>
                 {card.text && <Text>Text: {card.text}</Text>}
                 {card.mechanics && <Text style={styles.mechanics}>Mechanics :</Text>}
+                {card.img && <Image style={styles.img} source={{ uri: card.img }} />}
                 <FlatList
                     data={card.mechanics}
                     renderItem={({ item }) => <Text>{item.name}</Text>}
@@ -60,6 +60,11 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginBottom: 5,
         marginTop: 15,
+    },
+    img: {
+        width: '100%',
+        height: 500,
+        alignSelf:'center',
     },
     listContent: {
         paddingLeft: 5,

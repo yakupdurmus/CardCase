@@ -11,6 +11,7 @@ export interface ICard {
   playerClass: string;
   text: string;
   type: string;
+  img?: string;
   mechanics?: IMechanics[];
 }
 

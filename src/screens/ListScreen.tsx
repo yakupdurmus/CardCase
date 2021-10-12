@@ -50,6 +50,7 @@ const Cards = (props: IDefaultScreenProps) => {
 
     const renderItem = (card: ICard): JSX.Element => (
         <TouchableOpacity
+            style={styles.text}
             onPress={() => onPress(card)}>
             <Text>{card.name}</Text>
         </TouchableOpacity>
@@ -88,6 +89,11 @@ const styles = StyleSheet.create({
         padding: 10,
         backgroundColor: '#fff'
     },
+    text:{
+        padding:10,
+        backgroundColor:'#fff',
+        
+    },
     listContent: {
         padding: 5,
     },
@@ -96,7 +102,8 @@ const styles = StyleSheet.create({
         marginVertical: 10,
     },
     seperator: {
-        marginVertical: 5,
+        height:1,
+        backgroundColor:'#ddd'
     },
     input: {
         padding: 10,
